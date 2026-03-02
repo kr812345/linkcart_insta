@@ -1,681 +1,194 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LinkCart</title>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Krishna Yadav</title>
 
-    :root {
-      --bg: #0a0a0f;
-      --surface: #12121a;
-      --card: #1a1a26;
-      --border: #2a2a3d;
-      --accent: #c8ff57;
-      --accent2: #57c8ff;
-      --text: #f0f0f8;
-      --muted: #6b6b8a;
-      --radius: 18px;
-    }
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
 
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'DM Sans', sans-serif;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 24px 16px 60px;
-      position: relative;
-      overflow-x: hidden;
-    }
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
 
-    /* Ambient background blobs */
-    body::before, body::after {
-      content: '';
-      position: fixed;
-      border-radius: 50%;
-      filter: blur(120px);
-      opacity: 0.18;
-      pointer-events: none;
-      z-index: 0;
-    }
-    body::before {
-      width: 500px; height: 500px;
-      background: #c8ff57;
-      top: -150px; left: -150px;
-      animation: drift1 12s ease-in-out infinite alternate;
-    }
-    body::after {
-      width: 400px; height: 400px;
-      background: #57c8ff;
-      bottom: -100px; right: -100px;
-      animation: drift2 10s ease-in-out infinite alternate;
-    }
-    @keyframes drift1 { from { transform: translate(0,0); } to { transform: translate(60px, 80px); } }
-    @keyframes drift2 { from { transform: translate(0,0); } to { transform: translate(-50px,-60px); } }
+:root{
+--bg:#0a0a0f;
+--card:#1a1a26;
+--border:#2a2a3d;
+--accent:#c8ff57;
+--accent2:#57c8ff;
+--text:#f0f0f8;
+--muted:#6b6b8a;
+--radius:18px;
+}
 
-    .wrap {
-      position: relative;
-      z-index: 1;
-      width: 100%;
-      max-width: 480px;
-      display: flex;
-      flex-direction: column;
-      gap: 0;
-    }
+body{
+background:var(--bg);
+color:var(--text);
+font-family:'DM Sans',sans-serif;
+min-height:100vh;
+display:flex;
+flex-direction:column;
+align-items:center;
+padding:40px 16px;
+}
 
-    /* ── ADMIN TOGGLE ── */
-    .admin-toggle {
-      position: fixed;
-      top: 18px; right: 18px;
-      z-index: 100;
-      background: var(--card);
-      border: 1px solid var(--border);
-      color: var(--muted);
-      font-family: 'DM Sans', sans-serif;
-      font-size: 12px;
-      padding: 6px 14px;
-      border-radius: 999px;
-      cursor: pointer;
-      transition: all .2s;
-      letter-spacing: .04em;
-    }
-    .admin-toggle:hover { color: var(--accent); border-color: var(--accent); }
-    .admin-toggle.active { color: var(--bg); background: var(--accent); border-color: var(--accent); }
+.wrap{
+width:100%;
+max-width:480px;
+}
 
-    /* ── HEADER ── */
-    .header {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 48px 0 36px;
-      animation: fadeUp .6s ease both;
-    }
-    .avatar {
-      width: 88px; height: 88px;
-      border-radius: 50%;
-      border: 3px solid var(--accent);
-      object-fit: cover;
-      background: var(--card);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 36px;
-      overflow: hidden;
-      margin-bottom: 16px;
-      position: relative;
-    }
-    .avatar-emoji { font-size: 42px; }
-    .name {
-      font-family: 'Syne', sans-serif;
-      font-weight: 800;
-      font-size: 28px;
-      letter-spacing: -0.02em;
-      text-align: center;
-    }
-    .name span { color: var(--accent); }
-    .bio {
-      font-size: 14px;
-      color: var(--muted);
-      text-align: center;
-      margin-top: 8px;
-      max-width: 300px;
-      line-height: 1.6;
-    }
+.header{
+display:flex;
+flex-direction:column;
+align-items:center;
+padding-bottom:36px;
+}
 
-    /* ── LINKS ── */
-    .links-list {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      animation: fadeUp .6s .2s ease both;
-    }
+.avatar{
+width:88px;height:88px;
+border-radius:50%;
+border:3px solid var(--accent);
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:42px;
+margin-bottom:16px;
+}
 
-    .link-card {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 16px 20px;
-      text-decoration: none;
-      color: var(--text);
-      cursor: pointer;
-      transition: transform .2s, border-color .2s, box-shadow .2s;
-      position: relative;
-      overflow: hidden;
-    }
-    .link-card::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
-      opacity: 0;
-      transition: opacity .2s;
-      z-index: 0;
-    }
-    .link-card:hover { transform: translateY(-2px) scale(1.01); border-color: var(--accent); box-shadow: 0 8px 32px rgba(200,255,87,.08); }
-    .link-card:hover::before { opacity: .06; }
-    .link-card > * { position: relative; z-index: 1; }
+.name{
+font-family:'Syne',sans-serif;
+font-weight:800;
+font-size:28px;
+}
 
-    .link-icon {
-      width: 44px; height: 44px;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 22px;
-      flex-shrink: 0;
-      border: 1px solid var(--border);
-      background: var(--surface);
-    }
-    .link-info { flex: 1; min-width: 0; }
-    .link-title {
-      font-family: 'Syne', sans-serif;
-      font-weight: 700;
-      font-size: 15px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .link-url {
-      font-size: 12px;
-      color: var(--muted);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      margin-top: 2px;
-    }
-    .link-arrow {
-      font-size: 18px;
-      color: var(--muted);
-      transition: color .2s, transform .2s;
-    }
-    .link-card:hover .link-arrow { color: var(--accent); transform: translateX(3px); }
+.name span{color:var(--accent)}
 
-    /* Admin controls on card */
-    .link-actions {
-      display: none;
-      gap: 6px;
-      flex-shrink: 0;
-    }
-    body.admin-mode .link-actions { display: flex; }
-    body.admin-mode .link-arrow { display: none; }
-    body.admin-mode .link-card { cursor: default; pointer-events: none; }
-    body.admin-mode .link-card .link-actions { pointer-events: all; }
+.bio{
+font-size:14px;
+color:var(--muted);
+margin-top:8px;
+text-align:center;
+}
 
-    .btn-icon {
-      width: 32px; height: 32px;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      background: var(--surface);
-      color: var(--muted);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 14px;
-      transition: all .15s;
-    }
-    .btn-icon:hover.del { background: #ff4d4d22; border-color: #ff4d4d; color: #ff4d4d; }
-    .btn-icon:hover.edit { background: var(--accent)22; border-color: var(--accent); color: var(--accent); }
+.links{
+display:flex;
+flex-direction:column;
+gap:12px;
+}
 
-    /* ── ADD FORM ── */
-    .add-form {
-      display: none;
-      flex-direction: column;
-      gap: 12px;
-      background: var(--card);
-      border: 1px dashed var(--accent);
-      border-radius: var(--radius);
-      padding: 20px;
-      animation: fadeUp .3s ease both;
-      margin-top: 12px;
-    }
-    body.admin-mode .add-form { display: flex; }
+.link{
+display:flex;
+align-items:center;
+gap:16px;
+background:var(--card);
+border:1px solid var(--border);
+border-radius:var(--radius);
+padding:16px 20px;
+text-decoration:none;
+color:var(--text);
+transition:.2s;
+}
 
-    .form-row { display: flex; gap: 10px; }
-    .input-field {
-      flex: 1;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 10px 14px;
-      color: var(--text);
-      font-family: 'DM Sans', sans-serif;
-      font-size: 14px;
-      outline: none;
-      transition: border-color .2s;
-    }
-    .input-field::placeholder { color: var(--muted); }
-    .input-field:focus { border-color: var(--accent); }
+.link:hover{
+transform:translateY(-2px);
+border-color:var(--accent);
+}
 
-    .btn-add {
-      background: var(--accent);
-      color: var(--bg);
-      border: none;
-      border-radius: 10px;
-      padding: 10px 20px;
-      font-family: 'Syne', sans-serif;
-      font-weight: 700;
-      font-size: 14px;
-      cursor: pointer;
-      transition: opacity .2s, transform .15s;
-      letter-spacing: .02em;
-      white-space: nowrap;
-    }
-    .btn-add:hover { opacity: .85; transform: scale(.98); }
+.icon{
+width:44px;height:44px;
+border-radius:12px;
+display:flex;
+align-items:center;
+justify-content:center;
+background:#12121a;
+font-size:22px;
+border:1px solid var(--border);
+}
 
-    .form-hint {
-      font-size: 11px;
-      color: var(--muted);
-      text-align: center;
-    }
+.info{
+flex:1;
+}
 
-    /* ── FOOTER ── */
-    .footer {
-      text-align: center;
-      margin-top: 40px;
-      font-size: 12px;
-      color: var(--muted);
-      animation: fadeUp .6s .4s ease both;
-    }
-    .footer span { color: var(--accent); }
+.title{
+font-family:'Syne',sans-serif;
+font-weight:700;
+font-size:15px;
+}
 
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
+.url{
+font-size:12px;
+color:var(--muted);
+margin-top:2px;
+}
 
-    /* Empty state */
-    .empty-state {
-      text-align: center;
-      padding: 40px 20px;
-      color: var(--muted);
-      font-size: 14px;
-      border: 1px dashed var(--border);
-      border-radius: var(--radius);
-    }
-    .empty-state .big { font-size: 40px; margin-bottom: 10px; }
-
-    /* Notification toast */
-    .toast {
-      position: fixed;
-      bottom: 30px;
-      left: 50%;
-      transform: translateX(-50%) translateY(20px);
-      background: var(--accent);
-      color: var(--bg);
-      font-family: 'Syne', sans-serif;
-      font-weight: 700;
-      font-size: 13px;
-      padding: 10px 22px;
-      border-radius: 999px;
-      opacity: 0;
-      transition: opacity .3s, transform .3s;
-      pointer-events: none;
-      z-index: 200;
-      white-space: nowrap;
-    }
-    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-    /* Profile edit inputs (admin) */
-    .profile-edit {
-      display: none;
-      flex-direction: column;
-      gap: 10px;
-      background: var(--card);
-      border: 1px dashed var(--accent2);
-      border-radius: var(--radius);
-      padding: 16px;
-      margin-bottom: 20px;
-      animation: fadeUp .3s ease both;
-    }
-    body.admin-mode .profile-edit { display: flex; }
-    .profile-edit label { font-size: 11px; color: var(--muted); letter-spacing: .06em; text-transform: uppercase; }
-
-    /* copy button on link */
-    .btn-icon.copy:hover { background: var(--accent2)22; border-color: var(--accent2); color: var(--accent2); }
-
-    /* ── PASSWORD MODAL ── */
-    .modal-overlay {
-      position: fixed; inset: 0; z-index: 300;
-      background: rgba(10,10,15,.85);
-      backdrop-filter: blur(12px);
-      display: flex; align-items: center; justify-content: center;
-      opacity: 0; pointer-events: none;
-      transition: opacity .25s;
-    }
-    .modal-overlay.open { opacity: 1; pointer-events: all; }
-    .modal {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 24px;
-      padding: 36px 32px 28px;
-      width: 100%; max-width: 360px;
-      display: flex; flex-direction: column; gap: 16px;
-      transform: translateY(24px) scale(.97);
-      transition: transform .3s;
-      box-shadow: 0 24px 80px rgba(0,0,0,.5);
-    }
-    .modal-overlay.open .modal { transform: translateY(0) scale(1); }
-    .modal-title {
-      font-family: 'Syne', sans-serif;
-      font-weight: 800; font-size: 20px;
-      text-align: center;
-    }
-    .modal-sub { font-size: 13px; color: var(--muted); text-align: center; }
-    .pw-field-wrap { position: relative; }
-    .pw-field {
-      width: 100%;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 12px 44px 12px 16px;
-      color: var(--text);
-      font-family: 'DM Sans', sans-serif;
-      font-size: 15px;
-      outline: none;
-      transition: border-color .2s;
-      letter-spacing: .06em;
-    }
-    .pw-field:focus { border-color: var(--accent); }
-    .pw-field.error { border-color: #ff4d4d; animation: shake .3s; }
-    .pw-toggle {
-      position: absolute; right: 12px; top: 50%;
-      transform: translateY(-50%);
-      background: none; border: none; cursor: pointer;
-      color: var(--muted); font-size: 16px; padding: 4px;
-      transition: color .15s;
-    }
-    .pw-toggle:hover { color: var(--accent); }
-    .pw-error { font-size: 12px; color: #ff4d4d; text-align: center; min-height: 16px; }
-    .btn-unlock {
-      background: var(--accent); color: var(--bg);
-      border: none; border-radius: 12px;
-      padding: 13px; width: 100%;
-      font-family: 'Syne', sans-serif; font-weight: 700; font-size: 15px;
-      cursor: pointer; transition: opacity .2s, transform .15s;
-      letter-spacing: .02em;
-    }
-    .btn-unlock:hover { opacity: .85; transform: scale(.98); }
-    .btn-cancel {
-      background: none; border: none; color: var(--muted);
-      font-family: 'DM Sans', sans-serif; font-size: 13px;
-      cursor: pointer; text-align: center; padding: 4px;
-      transition: color .15s;
-    }
-    .btn-cancel:hover { color: var(--text); }
-    @keyframes shake {
-      0%,100% { transform: translateX(0); }
-      20%,60%  { transform: translateX(-6px); }
-      40%,80%  { transform: translateX(6px); }
-    }
-  </style>
+.footer{
+text-align:center;
+margin-top:40px;
+font-size:12px;
+color:var(--muted);
+}
+</style>
 </head>
+
 <body>
 
-  <button class="admin-toggle" id="adminToggle" onclick="handleEditClick()">✏️ Edit Mode</button>
+<div class="wrap">
 
-  <!-- Password Modal -->
-  <div class="modal-overlay" id="modalOverlay">
-    <div class="modal">
-      <div class="modal-title">🔐 Admin Access</div>
-      <div class="modal-sub">Enter your password to enable edit mode</div>
-      <div class="pw-field-wrap">
-        <input class="pw-field" id="pwInput" type="password" placeholder="Password" autocomplete="off"
-               onkeydown="if(event.key==='Enter')submitPassword()" />
-        <button class="pw-toggle" id="pwToggle" onclick="togglePwVisibility()" title="Show/hide">👁</button>
-      </div>
-      <div class="pw-error" id="pwError"></div>
-      <button class="btn-unlock" onclick="submitPassword()">Unlock ✦</button>
-      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
-    </div>
-  </div>
+<div class="header">
+<div class="avatar">🚀</div>
+<div class="name">Krishna <span>Yadav</span></div>
+<div class="bio">Builder · Developer · Creator</div>
+</div>
 
-  <div class="wrap">
+<div class="links">
 
-    <!-- Header -->
-    <div class="header">
-      <div class="avatar"><span class="avatar-emoji" id="avatarEmoji">🚀</span></div>
-      <div class="name" id="displayName">Your <span>Name</span></div>
-      <div class="bio" id="displayBio">Creator · Developer · Dreamer</div>
-    </div>
+<a class="link" href="https://linkroast.vercel.app" target="_blank">
+<div class="icon">🔥</div>
+<div class="info">
+<div class="title">LinkRoast</div>
+<div class="url">linkroast.vercel.app</div>
+</div>
+</a>
 
-    <!-- Profile Edit (admin only) -->
-    <div class="profile-edit" id="profileEdit">
-      <label>Display Emoji / Avatar</label>
-      <input class="input-field" id="editEmoji" placeholder="e.g. 🚀 or 😎" />
-      <label>Your Name</label>
-      <input class="input-field" id="editName" placeholder="Your name" />
-      <label>Short Bio</label>
-      <input class="input-field" id="editBio" placeholder="Creator · Developer · Dreamer" />
-      <button class="btn-add" style="background:var(--accent2)" onclick="saveProfile()">Save Profile</button>
-    </div>
+<a class="link" href="https://youtube.com/@krishna_x4" target="_blank">
+<div class="icon">▶️</div>
+<div class="info">
+<div class="title">YouTube</div>
+<div class="url">@krishna_x4</div>
+</div>
+</a>
 
-    <!-- Links -->
-    <div class="links-list" id="linksList"></div>
+<a class="link" href="https://linkedin.com/in/krishna-yadav-kr812345" target="_blank">
+<div class="icon">💼</div>
+<div class="info">
+<div class="title">LinkedIn</div>
+<div class="url">krishna-yadav-kr812345</div>
+</div>
+</a>
 
-    <!-- Add Form (admin only) -->
-    <div class="add-form" id="addForm">
-      <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:14px;color:var(--accent)">＋ Add New Link</div>
-      <div class="form-row">
-        <input class="input-field" id="inpEmoji" placeholder="Icon emoji e.g. 🎬" style="max-width:80px;text-align:center" />
-        <input class="input-field" id="inpTitle" placeholder="Label  e.g. YouTube" />
-      </div>
-      <input class="input-field" id="inpUrl" placeholder="https://..." />
-      <button class="btn-add" onclick="addLink()">Add to Cart 🛒</button>
-      <div class="form-hint">Links are saved in your browser. Share the page URL with visitors.</div>
-    </div>
+<a class="link" href="https://github.com/kr812345" target="_blank">
+<div class="icon">🐙</div>
+<div class="info">
+<div class="title">GitHub</div>
+<div class="url">github.com/kr812345</div>
+</div>
+</a>
 
-    <!-- Footer -->
-    <div class="footer">Powered by <span>LinkCart</span> · Your personal link hub</div>
-  </div>
+<div class="link" style="cursor:default">
+<div class="icon">🌐</div>
+<div class="info">
+<div class="title">Portfolio</div>
+<div class="url">Coming Soon</div>
+</div>
+</div>
 
-  <div class="toast" id="toast"></div>
+</div>
 
-<script>
-  // ── Storage helpers ──
-  const KEY_LINKS   = 'lc_links_v1';
-  const KEY_PROFILE = 'lc_profile_v1';
+<div class="footer">
+Personal link hub
+</div>
 
-  function load(key, fallback) {
-    try { return JSON.parse(localStorage.getItem(key)) || fallback; } catch { return fallback; }
-  }
-  function save(key, val) { localStorage.setItem(key, JSON.stringify(val)); }
+</div>
 
-  // ── State ──
-  let links = load(KEY_LINKS, [
-    { id: 1, emoji: '▶️', title: 'YouTube', url: 'https://youtube.com' },
-    { id: 2, emoji: '💼', title: 'LinkedIn', url: 'https://linkedin.com' },
-    { id: 3, emoji: '🌐', title: 'My Portfolio', url: 'https://yourportfolio.com' },
-  ]);
-  let profile = load(KEY_PROFILE, { emoji: '🚀', name: 'Your Name', bio: 'Creator · Developer · Dreamer' });
-  let adminMode = false;
-  let nextId = links.reduce((m, l) => Math.max(m, l.id), 0) + 1;
-
-  // ── Render ──
-  function render() {
-    // Profile
-    document.getElementById('avatarEmoji').textContent = profile.emoji || '🚀';
-    document.getElementById('displayName').innerHTML = profile.name
-      ? profile.name.replace(/^(\S+)(.*)$/, '$1 <span>$2</span>').trim()
-      : 'Your <span>Name</span>';
-    document.getElementById('displayBio').textContent = profile.bio || '';
-
-    // Populate edit fields
-    document.getElementById('editEmoji').value = profile.emoji || '';
-    document.getElementById('editName').value  = profile.name  || '';
-    document.getElementById('editBio').value   = profile.bio   || '';
-
-    // Links
-    const list = document.getElementById('linksList');
-    if (links.length === 0) {
-      list.innerHTML = `<div class="empty-state"><div class="big">🛒</div>No links yet. Enable Edit Mode to add some!</div>`;
-      return;
-    }
-    list.innerHTML = links.map((l, i) => `
-      <div class="link-card" style="animation:fadeUp .4s ${i * 0.07}s ease both"
-           onclick="visitLink('${l.url}')" id="card-${l.id}">
-        <div class="link-icon">${l.emoji}</div>
-        <div class="link-info">
-          <div class="link-title">${esc(l.title)}</div>
-          <div class="link-url">${esc(l.url)}</div>
-        </div>
-        <div class="link-actions">
-          <button class="btn-icon copy" title="Copy URL" onclick="event.stopPropagation();copyUrl('${esc(l.url)}')">⎘</button>
-          <button class="btn-icon edit" title="Edit" onclick="event.stopPropagation();editLink(${l.id})">✎</button>
-          <button class="btn-icon del"  title="Delete" onclick="event.stopPropagation();deleteLink(${l.id})">✕</button>
-        </div>
-        <div class="link-arrow">→</div>
-      </div>
-    `).join('');
-  }
-
-  function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-
-  function visitLink(url) {
-    if (adminMode) return;
-    if (!url.startsWith('http')) url = 'https://' + url;
-    window.open(url, '_blank', 'noopener');
-  }
-
-  // ── Password ──
-  // Password stored as char codes to avoid plain-text exposure in source
-  const CORRECT_PW = String.fromCharCode(60,100,105,118,62,60,47,100,105,118,62);
-
-  function handleEditClick() {
-    if (adminMode) {
-      adminMode = false;
-      document.body.classList.remove('admin-mode');
-      const btn = document.getElementById('adminToggle');
-      btn.textContent = '✏️ Edit Mode';
-      btn.classList.remove('active');
-      render();
-    } else {
-      openModal();
-    }
-  }
-
-  function openModal() {
-    document.getElementById('pwInput').value = '';
-    document.getElementById('pwError').textContent = '';
-    document.getElementById('pwInput').classList.remove('error');
-    document.getElementById('modalOverlay').classList.add('open');
-    setTimeout(() => document.getElementById('pwInput').focus(), 200);
-  }
-
-  function closeModal() {
-    document.getElementById('modalOverlay').classList.remove('open');
-  }
-
-  function submitPassword() {
-    const val = document.getElementById('pwInput').value;
-    if (val === CORRECT_PW) {
-      closeModal();
-      adminMode = true;
-      document.body.classList.add('admin-mode');
-      const btn = document.getElementById('adminToggle');
-      btn.textContent = '👁️ View Mode';
-      btn.classList.add('active');
-      render();
-      showToast('Welcome back! 🔓');
-    } else {
-      const field = document.getElementById('pwInput');
-      field.classList.add('error');
-      document.getElementById('pwError').textContent = 'Incorrect password. Try again.';
-      field.value = '';
-      setTimeout(() => field.classList.remove('error'), 400);
-      field.focus();
-    }
-  }
-
-  function togglePwVisibility() {
-    const inp = document.getElementById('pwInput');
-    const btn = document.getElementById('pwToggle');
-    if (inp.type === 'password') { inp.type = 'text'; btn.textContent = '🙈'; }
-    else { inp.type = 'password'; btn.textContent = '👁'; }
-  }
-
-  document.getElementById('modalOverlay').addEventListener('click', function(e) {
-    if (e.target === this) closeModal();
-  });
-
-  // ── Add link ──
-  function addLink() {
-    const emoji = document.getElementById('inpEmoji').value.trim() || '🔗';
-    const title = document.getElementById('inpTitle').value.trim();
-    const url   = document.getElementById('inpUrl').value.trim();
-    if (!title || !url) { showToast('Please fill in label & URL'); return; }
-    links.push({ id: nextId++, emoji, title, url });
-    save(KEY_LINKS, links);
-    document.getElementById('inpEmoji').value = '';
-    document.getElementById('inpTitle').value = '';
-    document.getElementById('inpUrl').value   = '';
-    render();
-    showToast('Link added! 🛒');
-  }
-
-  // ── Delete ──
-  function deleteLink(id) {
-    if (!confirm('Delete this link?')) return;
-    links = links.filter(l => l.id !== id);
-    save(KEY_LINKS, links);
-    render();
-    showToast('Link removed');
-  }
-
-  // ── Edit ──
-  function editLink(id) {
-    const l = links.find(x => x.id === id);
-    if (!l) return;
-    const emoji = prompt('Emoji icon:', l.emoji) ?? l.emoji;
-    const title = prompt('Label:', l.title);
-    const url   = prompt('URL:', l.url);
-    if (title !== null) l.title = title;
-    if (url   !== null) l.url   = url;
-    l.emoji = emoji;
-    save(KEY_LINKS, links);
-    render();
-    showToast('Link updated ✓');
-  }
-
-  // ── Copy URL ──
-  function copyUrl(url) {
-    navigator.clipboard.writeText(url).then(() => showToast('Copied! ⎘'));
-  }
-
-  // ── Save profile ──
-  function saveProfile() {
-    profile.emoji = document.getElementById('editEmoji').value.trim() || '🚀';
-    profile.name  = document.getElementById('editName').value.trim()  || 'Your Name';
-    profile.bio   = document.getElementById('editBio').value.trim();
-    save(KEY_PROFILE, profile);
-    render();
-    showToast('Profile saved ✓');
-  }
-
-  // ── Toast ──
-  function showToast(msg) {
-    const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.classList.add('show');
-    clearTimeout(t._timer);
-    t._timer = setTimeout(() => t.classList.remove('show'), 2200);
-  }
-
-  // Enter key on URL field
-  document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('inpUrl').addEventListener('keydown', e => { if (e.key === 'Enter') addLink(); });
-    render();
-  });
-
-  render();
-</script>
 </body>
 </html>
